@@ -10,12 +10,12 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 
 const IMAGES = [
-  "src/assets/Images/maldi.jpg",
-  "src/assets/Images/island-7058873_1280.jpg",
-  "src/assets/Images/rome.webp",
-  "src/assets/Images/fishes.png",
-  "src/assets/Images/mountain.webp",
-  "src/assets/Images/shangahai.webp",
+  "/images/maldi.jpg",
+  "/images/island-7058873_1280.jpg",
+  "/images/rome.webp",
+  "/images/fishes.png",
+  "/images/mountain.webp",
+  "/images/shangahai.webp",
 ];
 
 // const CAPTIONS = [
