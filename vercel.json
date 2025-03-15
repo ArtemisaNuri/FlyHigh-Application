@@ -1,8 +1,10 @@
 {
-  "routes": [
-    {
-      "src": "/(.*).html",
-      "dest": "/index.html"
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "routes": [{ "src": "/.*", "dest": "/index.html" }],
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
     }
-  ]
+  },
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- ."
 }
