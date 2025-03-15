@@ -30,13 +30,22 @@ export const SearchForm = () => {
 
   const [originSearch, setOriginSearch] = useState("");
   const [destinationSearch, setDestinationSearch] = useState("");
-  const [airports, setAirports] = useState<Airport[]>([]);
+  const [originAirports, setOriginAirports] = useState<Airport[]>([]);
+  const [destinationAirports, setDestinationAirports] = useState<Airport[]>([]);
+  const [activeField, setActiveField] = useState<
+    "origin" | "destination" | null
+  >(null);
 
-  const searchAirports = async (query: string) => {
+  const searchAirports = async (
+    query: string,
+    type: "origin" | "destination"
+  ) => {
     if (query.length < 2) {
-      setAirports([]);
+      type === "origin" ? setOriginAirports([]) : setDestinationAirports([]);
       return;
     }
+
+    setActiveField(type);
 
     const options = {
       method: "GET",
@@ -64,10 +73,14 @@ export const SearchForm = () => {
           countryName: item.presentation.subtitle,
         }));
 
-      setAirports(filtered);
+      if (type === "origin") {
+        setOriginAirports(filtered);
+      } else {
+        setDestinationAirports(filtered);
+      }
     } catch (error) {
-      console.error("Error fetching airports:", error);
-      setAirports([]);
+      console.error(`Error fetching ${type} airports:`, error);
+      type === "origin" ? setOriginAirports([]) : setDestinationAirports([]);
     }
   };
 
@@ -75,6 +88,30 @@ export const SearchForm = () => {
     e.preventDefault();
     const queryString = new URLSearchParams(formData).toString();
     navigate(`/results?${queryString}`);
+  };
+
+  const handleAirportSelection = (
+    airport: Airport,
+    type: "origin" | "destination"
+  ) => {
+    if (type === "origin") {
+      setFormData({
+        ...formData,
+        originSkyId: airport.code,
+        originEntityId: airport.id,
+      });
+      setOriginSearch(`${airport.name} (${airport.code})`);
+      setOriginAirports([]);
+    } else {
+      setFormData({
+        ...formData,
+        destinationSkyId: airport.code,
+        destinationEntityId: airport.id,
+      });
+      setDestinationSearch(`${airport.name} (${airport.code})`);
+      setDestinationAirports([]);
+    }
+    setActiveField(null);
   };
 
   return (
@@ -86,10 +123,10 @@ export const SearchForm = () => {
             Find Your Perfect Flight
           </CardTitle>
         </CardHeader>
-        <CardContent className="mt-6 px-6 md:px-8 pb-8">
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="flex-1 space-y-2">
+        <CardContent className="mt-6 px-4 sm:px-6 md:px-8 pb-8">
+          <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+              <div className="flex-1 space-y-2 relative">
                 <Label className="text-slate-300 text-sm">From</Label>
                 <Input
                   type="text"
@@ -97,41 +134,38 @@ export const SearchForm = () => {
                   value={originSearch}
                   onChange={(e) => {
                     setOriginSearch(e.target.value);
-                    searchAirports(e.target.value);
+                    searchAirports(e.target.value, "origin");
                   }}
                   className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-500 focus-visible:ring-slate-400 h-12"
+                  onFocus={() => setActiveField("origin")}
                 />
-                {airports.length > 0 && originSearch.length >= 2 && (
-                  <ul className="mt-2 bg-slate-800 text-slate-100 rounded-md shadow-xl max-h-64 overflow-auto border border-slate-700">
-                    {airports.map((airport) => (
-                      <li
-                        key={airport.id}
-                        className="px-4 py-2 cursor-pointer hover:bg-slate-700 transition-colors"
-                        onClick={() => {
-                          setFormData({
-                            ...formData,
-                            originSkyId: airport.code,
-                            originEntityId: airport.id,
-                          });
-                          setOriginSearch(`${airport.name} (${airport.code})`);
-                          setAirports([]);
-                        }}
-                      >
-                        <div className="font-medium">
-                          {airport.name} ({airport.code})
-                        </div>
-                        {airport.countryName && (
-                          <div className="text-sm text-slate-400">
-                            {airport.countryName}
+                {originAirports.length > 0 &&
+                  originSearch.length >= 2 &&
+                  activeField === "origin" && (
+                    <ul className="absolute z-20 w-full mt-2 bg-slate-800 text-slate-100 rounded-md shadow-xl max-h-64 overflow-auto border border-slate-700">
+                      {originAirports.map((airport) => (
+                        <li
+                          key={airport.id}
+                          className="px-4 py-2 cursor-pointer hover:bg-slate-700 transition-colors"
+                          onClick={() =>
+                            handleAirportSelection(airport, "origin")
+                          }
+                        >
+                          <div className="font-medium">
+                            {airport.name} ({airport.code})
                           </div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                          {airport.countryName && (
+                            <div className="text-sm text-slate-400">
+                              {airport.countryName}
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
               </div>
 
-              <div className="flex-1 space-y-2">
+              <div className="flex-1 space-y-2 relative">
                 <Label className="text-slate-300 text-sm">To</Label>
                 <Input
                   type="text"
@@ -139,44 +173,39 @@ export const SearchForm = () => {
                   value={destinationSearch}
                   onChange={(e) => {
                     setDestinationSearch(e.target.value);
-                    searchAirports(e.target.value);
+                    searchAirports(e.target.value, "destination");
                   }}
                   className="bg-slate-900/50 border-slate-600 text-white placeholder:text-slate-500 focus-visible:ring-slate-400 h-12"
+                  onFocus={() => setActiveField("destination")}
                 />
-                {airports.length > 0 && destinationSearch.length >= 2 && (
-                  <ul className="mt-2 bg-slate-800 text-slate-100 rounded-md shadow-xl max-h-64 overflow-auto border border-slate-700">
-                    {airports.map((airport) => (
-                      <li
-                        key={airport.id}
-                        className="px-4 py-2 cursor-pointer hover:bg-slate-700 transition-colors"
-                        onClick={() => {
-                          setFormData({
-                            ...formData,
-                            destinationSkyId: airport.code,
-                            destinationEntityId: airport.id,
-                          });
-                          setDestinationSearch(
-                            `${airport.name} (${airport.code})`
-                          );
-                          setAirports([]);
-                        }}
-                      >
-                        <div className="font-medium">
-                          {airport.name} ({airport.code})
-                        </div>
-                        {airport.countryName && (
-                          <div className="text-sm text-slate-400">
-                            {airport.countryName}
+                {destinationAirports.length > 0 &&
+                  destinationSearch.length >= 2 &&
+                  activeField === "destination" && (
+                    <ul className="absolute z-20 w-full mt-2 bg-slate-800 text-slate-100 rounded-md shadow-xl max-h-64 overflow-auto border border-slate-700">
+                      {destinationAirports.map((airport) => (
+                        <li
+                          key={airport.id}
+                          className="px-4 py-2 cursor-pointer hover:bg-slate-700 transition-colors"
+                          onClick={() =>
+                            handleAirportSelection(airport, "destination")
+                          }
+                        >
+                          <div className="font-medium">
+                            {airport.name} ({airport.code})
                           </div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                          {airport.countryName && (
+                            <div className="text-sm text-slate-400">
+                              {airport.countryName}
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
               <div className="flex-1 space-y-2">
                 <Label
                   htmlFor="date"
@@ -215,7 +244,7 @@ export const SearchForm = () => {
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
               <div className="flex-1 space-y-2">
                 <Label
                   htmlFor="adults"
