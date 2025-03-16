@@ -224,7 +224,10 @@ const HomePage: React.FC = () => {
             Join millions of happy travelers who have discovered their perfect
             adventures with us.
           </p>
-          <Button className="bg-white text-slate-800 hover:bg-gray-100 px-4 py-2 sm:px-6 md:px-8 sm:py-4 md:py-6 text-sm sm:text-base md:text-lg">
+          <Button
+            className="bg-white text-slate-800 hover:bg-gray-100 px-4 py-2 sm:px-6 md:px-8 sm:py-4 md:py-6 text-sm sm:text-base md:text-lg"
+            onClick={() => navigate("/search")}
+          >
             Get Started Now
           </Button>
         </div>

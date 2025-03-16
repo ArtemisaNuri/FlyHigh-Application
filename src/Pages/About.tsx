@@ -66,7 +66,7 @@ export default function AboutPage() {
             Our Mission
           </h2>
           <p className="text-white text-lg leading-relaxed">
-            At TravelApp, we believe that travel should be accessible,
+            At SmartFlights, we believe that travel should be accessible,
             enjoyable, and hassle-free for everyone. Our mission is to connect
             travelers with their dream destinations while providing exceptional
             service and unforgettable experiences that create memories to last a
@@ -267,7 +267,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-xl font-semibold mb-4 text-white">
-                TravelApp
+                SmartFlights{" "}
               </h3>
               <p className="text-white mb-4">
                 Making travel accessible, enjoyable, and hassle-free for
@@ -349,7 +349,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="w-5 h-5 text-indigo-400" />{" "}
-                  support@travelapp.com
+                  support@smartflights.com
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-indigo-400" /> Tirana, AL
@@ -360,7 +360,8 @@ export default function AboutPage() {
 
           <div className="border-t border-slate-700 mt-8 pt-8 text-center text-white">
             <p>
-              &copy; {new Date().getFullYear()} TravelApp. All rights reserved.
+              &copy; {new Date().getFullYear()} SmartFlights. All rights
+              reserved.
             </p>
           </div>
         </div>
@@ -491,7 +492,7 @@ const team = [
 const timeline = [
   {
     year: "2020",
-    event: "TravelApp founded with a mission to transform travel booking",
+    event: "SmartFlights founded with a mission to transform travel booking",
   },
   {
     year: "2021",
