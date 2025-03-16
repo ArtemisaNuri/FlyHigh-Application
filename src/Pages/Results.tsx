@@ -279,26 +279,7 @@ const FlightCard = ({ itinerary, legs }: FlightCardProps) => {
     return "Date not available";
   };
 
-  const formatDate = (dateTime: string) => {
-    try {
-      if (!dateTime) return "N/A";
-
-      // Handle ISO date strings
-      const date = new Date(dateTime);
-      if (!isNaN(date.getTime())) {
-        return date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-      }
-
-      return dateTime; // Return as is if it's already formatted
-    } catch (e) {
-      return "N/A";
-    }
-  };
-
+ 
   const getDuration = (minutes: number) => {
     if (!minutes || isNaN(minutes)) return "N/A";
     const hours = Math.floor(minutes / 60);
