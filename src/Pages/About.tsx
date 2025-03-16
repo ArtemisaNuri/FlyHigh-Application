@@ -41,7 +41,7 @@ export default function AboutPage() {
     <div className="bg-slate-900 min-h-screen text-white">
       <div
         className="relative h-[60vh] flex items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: "url('src/assets/Images/planee.webp')" }}
+        style={{ backgroundImage: "url('/images/planee.webp')" }}
       >
         <div className="absolute inset-0 bg-black/60"></div>
         <div className="relative text-center z-10 max-w-3xl px-4">
